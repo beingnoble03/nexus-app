@@ -5,4 +5,4 @@ class Panel(models.Model):
     place = models.CharField(max_length=100)
     available = models.BooleanField()
     status = models.CharField(max_length=50)
-    members = models.ForeignKey(ImgMember, on_delete=models.CASCADE)
+    members = models.ManyToManyField(ImgMember, blank = True)
