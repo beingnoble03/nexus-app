@@ -11,7 +11,7 @@ from nexus_app.views.round.round_interview_list import RoundInterviewViewSet
 from nexus_app.views.round.section_marks import SectionMarksViewSet
 from nexus_app.views.round.test_list import TestApplicantViewSet
 from nexus_app.views.round.test_score import TestScoreView
-from nexus_app.views.round.members_list import MemberViewSet
+from nexus_app.views.round.members import MemberViewSet
 from nexus_app.views.round.test_sections import TestSectionViewset
 from nexus_app.views.season import SeasonViewSet
 from django.urls import path

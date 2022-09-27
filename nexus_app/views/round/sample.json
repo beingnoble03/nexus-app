@@ -1,0 +1,37 @@
+{
+    "userId": 15863,
+    "username": "21116066",
+    "person": {
+        "fullName": "Noble Mittal",
+        "shortName": "",
+        "roles": [
+            {
+                "role": "Student",
+                "activeStatus": "ActiveStatus.IS_ACTIVE"
+            },
+            {
+                "role": "Maintainer",
+                "activeStatus": "ActiveStatus.IS_ACTIVE"
+            }
+        ],
+        "displayPicture": "/media/kernel/display_pictures/144baf9c-9666-481d-97d9-4fc5a026fddf.png"
+    },
+    "student": {
+        "enrolmentNumber": "21116066",
+        "branch name": "B.Tech. (Electronics & Communication Engineering)",
+        "branch degree name": "B.Tech. - Bachelor of Technology",
+        "endDate": null,
+        "startDate": "2021-11-27",
+        "currentYear": 2
+    },
+    "contactInformation": {
+        "primaryPhoneNumber": "9464207862",
+        "instituteWebmailAddress": "n_mittal@ece.iitr.ac.in"
+    },
+    "socialInformation": {
+        "git": "https: //github.com/beingnoble03",
+        "ins": "https://www.instagram.com/being_noble03/",
+        "lin": "https://www.linkedin.com/in/noble-mittal-4b3a511a6/",
+        "fac": "https://www.facebook.com/noble.mittal/"
+    }
+}
