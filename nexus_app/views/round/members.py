@@ -33,5 +33,15 @@ class MemberViewSet(viewsets.ModelViewSet):
                 "Authorization": "Bearer " + response_data["access_token"]
             }
         ).json()
-        print(user_data)
+        if user_data["errors"]:
+            return Response(user_data, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            member = ImgMember.objects.filter(
+                enrollment_number = user_data.student.enrollmentNumber)
+        except ImgMember.DoesNotExist:
+            pass
         return Response(user_data, status=status.HTTP_200_OK)
+
+
+        

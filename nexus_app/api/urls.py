@@ -13,7 +13,7 @@ from nexus_app.views.round.test_list import TestApplicantViewSet
 from nexus_app.views.round.test_score import TestScoreView
 from nexus_app.views.round.members import MemberViewSet
 from nexus_app.views.round.test_sections import TestSectionViewset
-from nexus_app.views.season import SeasonViewSet
+from nexus_app.views.round.season import SeasonViewSet
 from django.urls import path
 
 router = DefaultRouter()
