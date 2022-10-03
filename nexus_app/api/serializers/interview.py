@@ -10,7 +10,7 @@ class InterviewSerializer(serializers.ModelSerializer):
         details = {
             "id": instance.applicant.id,
             "name": instance.applicant.name,
-            "enrollment_number": instance.applicant.enrollment_number,
+            "enrolment_number": instance.applicant.enrolment_number,
             "mobile": instance.applicant.mobile
         }
         return details
@@ -18,7 +18,7 @@ class InterviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Interview
         fields = '__all__'
-
+# override method validate, such that remarks can be added only by 3or4y.
 class InterviewSectionMarksSerializer(serializers.ModelSerializer):
     section_marks = serializers.SerializerMethodField('get_section_details')
     applicant_details = serializers.SerializerMethodField('get_applicant_details')
@@ -30,7 +30,7 @@ class InterviewSectionMarksSerializer(serializers.ModelSerializer):
         details = {
             "id": instance.applicant.id,
             "name": instance.applicant.name,
-            "enrollment_number": instance.applicant.enrollment_number,
+            "enrolment_number": instance.applicant.enrolment_number,
         }
         return details
 

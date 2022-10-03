@@ -5,13 +5,17 @@ from django.shortcuts import get_object_or_404, get_list_or_404
 from nexus_app.api.serializers.img_member import ImgMemberSerializer
 from nexus_app.api.serializers.score import ScoreSerializer
 from rest_framework import status
-
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
+from nexus_app.permissions import Is3or4y
 
 class TestScoreView(APIView):
     """
     Get a list of scores and questions of a particular applicant in a 
     particular test, create or update score instances using 'post' request.
     """
+    permission_classes = [IsAuthenticated, Is3or4y]
+    authentication_classes = [TokenAuthentication, ]  
     def get(self, request):
         applicant_id = request.GET.get('applicant_id', None)
         test_id = request.GET.get('test_id', None)
@@ -38,6 +42,8 @@ class TestScoreView(APIView):
                      applicant__id = applicant_id)
                 except Score.DoesNotExist:
                     score = None
+                # data = QuestionSerializer(question).data
+                # data["scores"] = ScoreSerializer(score)
                 question_dict["id"] = question.id
                 question_dict["title"] = question.title
                 question_dict["maximum_marks"] = question.maximum_marks
@@ -58,7 +64,7 @@ class TestScoreView(APIView):
         applicant = get_object_or_404(Applicant, id = applicant_id)
         applicant_details = {
             "name": applicant.name,
-            "enrollment_number": applicant.enrollment_number
+            "enrolment_number": applicant.enrolment_number
         }
 
         test_details = {
@@ -109,3 +115,9 @@ class TestScoreView(APIView):
         else:
             return Response(serialized_data.errors,
             status = status.HTTP_400_BAD_REQUEST)
+
+# from django.db.models import Q
+# Q and F in django
+# questions = Question.objects.filter(Q(section__test_id=test_id))
+# scores = Score.objects.filter(question__in=questions, applicant_id=applicant_id)
+# scores = Score.objects.filter(applicant_id=applicant_id, question__test_id=test_id)

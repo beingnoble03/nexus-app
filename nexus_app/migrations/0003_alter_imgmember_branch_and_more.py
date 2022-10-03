@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name='imgmember',
-            name='enrollment_number',
+            name='enrolment_number',
             field=models.IntegerField(null=True, unique=True),
         ),
         migrations.AlterField(

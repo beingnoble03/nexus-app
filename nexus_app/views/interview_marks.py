@@ -4,8 +4,15 @@ from nexus_app.api.serializers.section_marks import SectionMarksSerializer
 from nexus_app.models import Applicant, Round, InterviewSection, SectionMarks, Interview
 from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework import status
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from nexus_app.permissions import Is3or4y
+
 
 class InterviewMarksView(APIView):
+    permission_classes = [IsAuthenticated, Is3or4y]
+    authentication_classes = [TokenAuthentication, ]
+
     def get(self, request):
         applicant_id = request.GET.get('applicant_id', None)
         round_id = request.GET.get('round_id', None)
@@ -18,7 +25,7 @@ class InterviewMarksView(APIView):
         applicant_details = {
             "id": applicant.id,
             "name": applicant.name,
-            "enrollment_number": applicant.enrollment_number
+            "enrolment_number": applicant.enrolment_number
         }
 
         round_details = {}

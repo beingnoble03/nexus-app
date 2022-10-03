@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
                 ('branch', models.CharField(max_length=50)),
                 ('role', models.CharField(max_length=50)),
                 ('year', models.SmallIntegerField()),
-                ('enrollment_number', models.IntegerField(unique=True)),
+                ('enrolment_number', models.IntegerField(unique=True)),
                 ('groups', models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.group', verbose_name='groups')),
                 ('user_permissions', models.ManyToManyField(blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user', to='auth.permission', verbose_name='user permissions')),
             ],
@@ -52,7 +52,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=50)),
-                ('enrollment_number', models.BigIntegerField(unique=True)),
+                ('enrolment_number', models.BigIntegerField(unique=True)),
                 ('branch', models.CharField(max_length=50)),
                 ('mobile', models.CharField(max_length=13)),
                 ('status', models.CharField(max_length=50)),

@@ -16,7 +16,7 @@ class TestApplicantSerializer(serializers.ModelSerializer):
         for test_applicant in instance.round.applicants.all():
             applicant_dict["id"] = test_applicant.id
             applicant_dict["name"] = test_applicant.name
-            applicant_dict["enrollment_number"] = test_applicant.enrollment_number
+            applicant_dict["enrolment_number"] = test_applicant.enrolment_number
             applicant_dict["mobile"] = test_applicant.mobile
             if number_of_questions != Score.objects.filter(
                 applicant=test_applicant, 

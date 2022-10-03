@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'nexus_app',
     "corsheaders",
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -70,6 +71,12 @@ TEMPLATES = [
         },
     },
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
 
 WSGI_APPLICATION = 'nexus.wsgi.application'
 

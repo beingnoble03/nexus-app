@@ -2,9 +2,12 @@ from rest_framework import viewsets, status
 from nexus_app.api.serializers.question import QuestionSerializer, QuestionWithAssigneeDetailsSerializer
 from nexus_app.models import Question
 from rest_framework.response import Response
-
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
 
 class QuestionViewset(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, ]
+    authentication_classes = [TokenAuthentication, ]
     serializer_class = QuestionWithAssigneeDetailsSerializer
     queryset = Question.objects.all()
 
