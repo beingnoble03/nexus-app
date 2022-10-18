@@ -9,11 +9,11 @@ class TestApplicantSerializer(serializers.ModelSerializer):
         number_of_questions = 0
         section_list = instance.section_set.all()
         for section in section_list:
-            number_of_questions =+ section.question_set.count()
+            number_of_questions += section.question_set.count()
         applicant_list = []
-        applicant_dict = {}
 
         for test_applicant in instance.round.applicants.all():
+            applicant_dict = {}
             applicant_dict["id"] = test_applicant.id
             applicant_dict["name"] = test_applicant.name
             applicant_dict["enrolment_number"] = test_applicant.enrolment_number
