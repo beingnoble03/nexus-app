@@ -5,7 +5,7 @@ class Is3or4y(permissions.BasePermission):
     message = 'Only 3y and 4y are permitted.'
 
     def has_permission(self, request, view):
-        return request.user.year >= 3
+        return request.user.is_master
 
 class CanViewMemberDetails(permissions.BasePermission):
     message = '2y or 1y are not permitted to view details of 3y or later.'

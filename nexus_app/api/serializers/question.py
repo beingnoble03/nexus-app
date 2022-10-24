@@ -15,5 +15,5 @@ class QuestionWithAssigneeDetailsSerializer(serializers.ModelSerializer):
         return ImgMemberSerializer(assignee_queryset, many=True).data
 
     class Meta:
-        fields = ["id", "title", "maximum_marks", "assignee_details", "section"]
+        fields = '__all__'
         model = Question

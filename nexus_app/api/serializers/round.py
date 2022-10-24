@@ -15,6 +15,7 @@ class RoundSerializer(serializers.ModelSerializer):
         title_list = []
         test_dict = {}
         for test in instance.tests.all():
+            test_dict = {}
             test_dict["id"] = test.id
             test_dict["title"] = test.title
             title_list.append(test_dict)

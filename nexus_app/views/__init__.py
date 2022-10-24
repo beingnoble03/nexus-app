@@ -15,4 +15,4 @@ from .section_marks import SectionMarksViewSet
 from .test_list import TestApplicantViewSet
 from .test_score import TestScoreView
 from .test_sections import TestSectionViewset
-from .members_name import MemberNameViewSet
+from .section import SectionViewSet

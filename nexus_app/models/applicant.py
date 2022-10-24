@@ -25,3 +25,6 @@ class Applicant(models.Model):
     year = models.IntegerField()
     round = models.ManyToManyField(Round, related_name="applicants",
     related_query_name="applicant", blank=True)
+    
+    def __str__(self) -> str:
+        return self.name + ' (' + str(self.enrolment_number) + ')'

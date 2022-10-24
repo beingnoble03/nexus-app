@@ -5,6 +5,7 @@ from .panel import PanelSerializer
 
 class InterviewSerializer(serializers.ModelSerializer):
     applicant_details = serializers.SerializerMethodField("get_applicant_details")
+    panel_place = serializers.SerializerMethodField("get_panel_place")
 
     def get_applicant_details(self, instance):
         details = {
@@ -14,10 +15,18 @@ class InterviewSerializer(serializers.ModelSerializer):
             "mobile": instance.applicant.mobile
         }
         return details
+    
+    def get_panel_place(self, instance):
+        if instance.panel:
+            return instance.panel.place
+        return None
 
     class Meta:
         model = Interview
         fields = '__all__'
+    
+    
+
 # override method validate, such that remarks can be added only by 3or4y.
 class InterviewSectionMarksSerializer(serializers.ModelSerializer):
     section_marks = serializers.SerializerMethodField('get_section_details')

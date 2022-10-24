@@ -10,7 +10,8 @@ from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from nexus_app.permissions import CanViewMemberDetails
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
+from django.db.models import Q
 import requests
 import string
 import random
@@ -29,7 +30,7 @@ class MemberViewSet(viewsets.ModelViewSet):
     #     if self.action == 'update':
     #         self.permission_classes_by_action[self]
     @action(
-        methods=["POST"],
+        methods=["POST", "GET", ],
         detail=False,
         url_path="onLogin",
         url_name="onLogin",
@@ -40,8 +41,8 @@ class MemberViewSet(viewsets.ModelViewSet):
         "client_id": "i8VvoKOswXhwAUA4KrjbpBsj87CrFgreBLhN1IgE",
         "client_secret": "c0Tkra7lexDUCO1RhCyuJbskRUNkZVP3X4daqP90yBuEbN2WqnUpw1EUWlxAR2rKtLlIeP0r00n0RiIU6gOMR2X9KJM7WEjZ7CkYEr3YzHgAG4kJjQAvvNmKMcfYczIM",
         "grant_type": "authorization_code",
-        "redirect_uri": "http://localhost:3000/",
-        "code": self.request.data["code"]
+        "redirect_uri": "http://localhost:8000/api/members/onLogin",
+        "code": request.GET["code"]
         }
         response_data = requests.post(
             url="https://channeli.in/open_auth/token/",
@@ -109,10 +110,10 @@ class MemberViewSet(viewsets.ModelViewSet):
             user_required.year = student_details["currentYear"]
             user_required.enrolment_number = student_details["enrolmentNumber"]
             user_required.email = contact_details["instituteWebmailAddress"]
-            user_required.picture = "https://channeli.in" + personal_details["displayPicture"]
+            user_required.image = "https://channeli.in" + personal_details["displayPicture"]
             user_required.save()
             user_data["token"] = Token.objects.get(user = user_required).key
-            return Response(user_data, status=status.HTTP_200_OK)
+            return redirect(f'http://localhost:3000/oauthJump/?token={user_data["token"]}')
 
 
     @action(
@@ -131,11 +132,11 @@ class MemberViewSet(viewsets.ModelViewSet):
     @action(
         methods=['GET', ],
         detail=False,
-        url_name='namesList',
-        url_path='namesList',
+        url_name='namesListNot2y',
+        url_path='namesListNot2y',
         permission_classes = [IsAuthenticated, ],
         authentication_classes = [TokenAuthentication, ]
     )
     def get_names_list(self, request):
-        serializer = ImgMemberNameSerializer(ImgMember.objects.all(), many = True)
+        serializer = ImgMemberNameSerializer(ImgMember.objects.filter(~Q(year=2) & ~Q(year=1)), many = True)
         return Response(serializer.data, status.HTTP_200_OK)

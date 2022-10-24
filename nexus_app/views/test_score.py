@@ -12,7 +12,7 @@ from nexus_app.permissions import Is3or4y
 class TestScoreView(APIView):
     """
     Get a list of scores and questions of a particular applicant in a 
-    particular test, create or update score instances using 'post' request.
+    particular test, create or update score instances using 'POST' request.
     """
     permission_classes = [IsAuthenticated, Is3or4y]
     authentication_classes = [TokenAuthentication, ]  
@@ -64,7 +64,8 @@ class TestScoreView(APIView):
         applicant = get_object_or_404(Applicant, id = applicant_id)
         applicant_details = {
             "name": applicant.name,
-            "enrolment_number": applicant.enrolment_number
+            "enrolment_number": applicant.enrolment_number,
+            "id": applicant.id
         }
 
         test_details = {

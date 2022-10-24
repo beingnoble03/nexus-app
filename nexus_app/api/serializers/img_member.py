@@ -4,10 +4,10 @@ from nexus_app.models import ImgMember
 
 class ImgMemberSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ["id", "enrolment_number", "name", "username", "year", "email"]
+        fields = ["id", "enrolment_number", "name", "username", "year", "email", "image", "is_master"]
         model = ImgMember
 
 class ImgMemberNameSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ["id", "name"]
+        fields = ["id", "name", "is_master"]
         model = ImgMember

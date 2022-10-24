@@ -19,3 +19,6 @@ from rest_framework.authtoken.models import Token
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
+    if not instance.image:
+        instance.image = "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+        instance.save()

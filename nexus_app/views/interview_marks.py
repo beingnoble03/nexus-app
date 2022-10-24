@@ -33,7 +33,7 @@ class InterviewMarksView(APIView):
 
         section_details = []
         section_queryset = round.interview_sections.all()
-        interview = Interview.objects.get(applicant = applicant)
+        interview = Interview.objects.get(applicant = applicant, round = round)
         for section in section_queryset:
             section_dict = {}
             try:

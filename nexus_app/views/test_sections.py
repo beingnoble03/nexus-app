@@ -6,6 +6,8 @@ from nexus_app. models import Test, Section
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
+from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 class TestSectionViewset(viewsets.ModelViewSet):
@@ -13,8 +15,12 @@ class TestSectionViewset(viewsets.ModelViewSet):
     Returns sections with their questions of a test
     """
     permission_classes = [IsAuthenticated, ]
-    authentication_classes = [TokenAuthentication, ]  
+    authentication_classes = [TokenAuthentication, ]
     serializer_class = TestSectionSerializer
+    filter_backends = [filters.SearchFilter, DjangoFilterBackend]
+    search_fields = ['test__title', ]
+    filterset_fields = ['id', ]
+    
     queryset = Test.objects.all()
 
     def create(self, request):

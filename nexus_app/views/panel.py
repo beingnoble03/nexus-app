@@ -3,6 +3,8 @@ from nexus_app.models import Panel
 from nexus_app.api.serializers.panel import PanelSerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
 
 class PanelViewSet(viewsets.ModelViewSet):
     """
@@ -13,3 +15,7 @@ class PanelViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication, ]
     serializer_class = PanelSerializer
     queryset = Panel.objects.all()
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend, ]
+    search_fields = ['place', ]
+    filterset_fields = ['available', 'status', ]
+    ordering_fields = '__all__'

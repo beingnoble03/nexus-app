@@ -20,6 +20,7 @@ router.register(r"interviews", InterviewViewSet, "interview-viewset")
 router.register(r"seasons", SeasonViewSet, "season-viewset")
 router.register(r"sectionMarks", SectionMarksViewSet, "section-marks-viewset")
 router.register(r"current_user", CurrentUserViewSet, "current-user-viewset")
+router.register(r"sections", SectionViewSet, "current-user-viewset")
 urlpatterns = router.urls
 
 urlpatterns += [
