@@ -13,7 +13,8 @@ class TestApplicantSerializer(serializers.ModelSerializer):
             number_of_questions += section.question_set.count()
         applicant_list = []
         search_params = self.context["request"].query_params.get(
-            "search", None)
+            "search", None
+        )
         evaluated_params = self.context["request"].query_params.get(
             "evaluated", None
         )
@@ -22,6 +23,9 @@ class TestApplicantSerializer(serializers.ModelSerializer):
         )
         max_marks_params = self.context["request"].query_params.get(
             "max_marks", None
+        )
+        top_percentage_params = self.context["request"].query_params.get(
+            "top_percentage", None
         )
 
         for test_applicant in instance.round.applicants.all():
@@ -43,17 +47,22 @@ class TestApplicantSerializer(serializers.ModelSerializer):
                     applicant_dict["status"] = "Not Evaluated"
                 else:
                     applicant_dict["status"] = "Evaluated"
-
-                print(self.context.get("is3yor4y"))
+                if self.context.get("is3yor4y"):
+                    applicant_dict["total_marks"] = total_marks
                 if (not evaluated_params or (evaluated_params == "true" and applicant_dict["status"] == "Evaluated") or (evaluated_params == "false" and applicant_dict["status"] == "Not Evaluated")):
                     if (not min_marks_params or not self.context.get("is3yor4y") or (int(min_marks_params) <= total_marks)):
                         if (not max_marks_params or not self.context.get("is3yor4y") or (int(max_marks_params) >= total_marks)):
                             applicant_list.append(applicant_dict)
+
+        if self.context.get("is3yor4y") and (top_percentage_params == "true"):
+            new_list = sorted(
+                applicant_list, key=lambda d: d["total_marks"], reverse=True)
+            return new_list
         return applicant_list
 
     class Meta:
         model = Test
-        fields = ['id', 'title', 'applicants']
+        fields = ['id', 'title', 'applicants', 'round']
 
 
 class TestSectionSerializer(serializers.ModelSerializer):
