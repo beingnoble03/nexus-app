@@ -43,6 +43,7 @@ class InterviewMarksView(APIView):
                 section_marks = None
             section_dict["maximum_marks"] = section.maximum_marks
             section_dict["title"] = section.title
+            section_dict["id"] = section.id
             if section_marks:
                 section_dict["section_marks_id"] = section_marks.id
                 section_dict["obtained_marks"] = section_marks.obtained_marks

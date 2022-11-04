@@ -5,7 +5,7 @@ from nexus_app.api.serializers.img_member import ImgMemberNameSerializer
 from nexus_app.models import ImgMember
 from nexus_app.api.serializers.img_member import ImgMemberSerializer
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth import login, logout
+from rest_framework import filters
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -21,6 +21,8 @@ class MemberViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication, ]
     serializer_class = ImgMemberSerializer
     queryset = ImgMember.objects.all()
+    filter_backends = [filters.SearchFilter, ]
+    search_fields = ['name', 'enrolment_number', ]
 
     # permission_classes_by_action = {
     #     'update': PermissionUpdateClass,
@@ -138,5 +140,6 @@ class MemberViewSet(viewsets.ModelViewSet):
         authentication_classes = [TokenAuthentication, ]
     )
     def get_names_list(self, request):
-        serializer = ImgMemberNameSerializer(ImgMember.objects.filter(~Q(year=2) & ~Q(year=1)), many = True)
+        queryset = self.filter_queryset(self.get_queryset()).filter(~Q(year=2) & ~Q(year=1))
+        serializer = ImgMemberNameSerializer(queryset, many = True)
         return Response(serializer.data, status.HTTP_200_OK)
