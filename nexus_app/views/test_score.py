@@ -19,6 +19,7 @@ class TestScoreView(APIView):
     def get(self, request):
         applicant_id = request.GET.get('applicant_id', None)
         test_id = request.GET.get('test_id', None)
+        show_for_current_user = request.GET.get('show_for_current_user', None)
         if applicant_id == None or test_id == None:
             return Response({
                 "details": "applicant_id or test_id doesn't exist"
@@ -36,28 +37,29 @@ class TestScoreView(APIView):
                 question_queryset = None
             questions = []
             for question in question_queryset:
-                question_dict = {}
-                try:
-                    score = Score.objects.get(question = question,
-                     applicant__id = applicant_id)
-                except Score.DoesNotExist:
-                    score = None
-                # data = QuestionSerializer(question).data
-                # data["scores"] = ScoreSerializer(score)
-                question_dict["id"] = question.id
-                question_dict["title"] = question.title
-                question_dict["maximum_marks"] = question.maximum_marks
-                question_dict["assignee"] = ImgMemberSerializer(
-                    question.assignee, many = True).data
-                if score:
-                    question_dict["score_id"] = score.id
-                    question_dict["obtained_marks"] = score.obtained_marks
-                    question_dict["remarks"] = score.remarks
-                else:
-                    question_dict["score_id"] = None
-                    question_dict["obtained_marks"] = None
-                    question_dict["remarks"] = None
-                questions.append(question_dict)
+                if not show_for_current_user or (show_for_current_user == "true" and (request.user in question.assignee.all())) or show_for_current_user == "false":
+                    question_dict = {}
+                    try:
+                        score = Score.objects.get(question = question,
+                         applicant__id = applicant_id)
+                    except Score.DoesNotExist:
+                        score = None
+                    # data = QuestionSerializer(question).data
+                    # data["scores"] = ScoreSerializer(score)
+                    question_dict["id"] = question.id
+                    question_dict["title"] = question.title
+                    question_dict["maximum_marks"] = question.maximum_marks
+                    question_dict["assignee"] = ImgMemberSerializer(
+                        question.assignee, many = True).data
+                    if score:
+                        question_dict["score_id"] = score.id
+                        question_dict["obtained_marks"] = score.obtained_marks
+                        question_dict["remarks"] = score.remarks
+                    else:
+                        question_dict["score_id"] = None
+                        question_dict["obtained_marks"] = None
+                        question_dict["remarks"] = None
+                    questions.append(question_dict)
             section_dict["questions"] = questions
             sections.append(section_dict)
         
