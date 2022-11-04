@@ -16,7 +16,7 @@ class QuestionViewset(viewsets.ModelViewSet):
         To create Question instance, request.data should include section, title, maximum_marks, assignee(optional)
         """
         request_data = request.data
-        serialized_data = QuestionSerializer(data = request_data)
+        serialized_data = QuestionWithAssigneeDetailsSerializer(data = request_data)
         if serialized_data.is_valid():
             self.perform_create(serialized_data)
             return Response(serialized_data.data, status.HTTP_201_CREATED)

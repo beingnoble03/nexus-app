@@ -9,7 +9,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework import filters
 
 
-class TestApplicantViewSet(viewsets.ReadOnlyModelViewSet):
+class TestApplicantViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, ]
     authentication_classes = [TokenAuthentication, ]
     serializer_class = TestApplicantSerializer
