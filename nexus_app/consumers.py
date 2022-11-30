@@ -66,6 +66,13 @@ class InterviewConsumer(WebsocketConsumer):
             self.round_group_name, {"type": "interview", "interviews": serializer.data, "action_type": "updated_interview"}
         )
 
+    def fetch_interview(self, data):
+        interview = Interview.objects.get(id=data["interview"])
+        serializer = InterviewSerializer(instance=interview)
+        async_to_sync(self.channel_layer.group_send)(
+            self.round_group_name, {"type": "interview", "interviews": serializer.data, "action_type": "updated_interview"}
+        )
+
     def interview(self, event):
         interviews = event["interviews"]
         action_type = event["action_type"]
@@ -79,6 +86,8 @@ class InterviewConsumer(WebsocketConsumer):
             self.send_interviews()
         elif action_demanded == "update_interview":
             self.update_interview(data["data"])
+        elif action_demanded == "fetch_interview":
+            self.fetch_interview(data["data"])
 
     def connect(self):
         self.round_id = self.scope["url_route"]["kwargs"]["round_id"]
