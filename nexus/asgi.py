@@ -13,4 +13,17 @@ from django.core.asgi import get_asgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'nexus.settings')
 
-application = get_asgi_application()
+django_application = get_asgi_application()
+
+from channels.routing import ProtocolTypeRouter, URLRouter
+from nexus_app import routing
+from channels.auth import AuthMiddlewareStack
+
+application = ProtocolTypeRouter({
+    'websocket': AuthMiddlewareStack(
+        URLRouter(
+            routing.websocket_urlpatterns
+        )
+    ),
+    "http": django_application,
+})
