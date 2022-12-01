@@ -16,3 +16,4 @@ from .test_list import TestApplicantViewSet
 from .test_score import TestScoreView
 from .test_sections import TestSectionViewset
 from .section import SectionViewSet
+from .remarks import RemarksView
