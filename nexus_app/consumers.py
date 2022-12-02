@@ -1,44 +1,7 @@
-# from .models import Interview
-# from .api.serializers.interview import InterviewSerializer
-# from djangochannelsrestframework.generics import GenericAsyncAPIConsumer
-# from djangochannelsrestframework.mixins import ListModelMixin, PatchModelMixin, CreateModelMixin
-# from djangochannelsrestframework.observer import model_observer
-# from djangochannelsrestframework import permissions
-# from djangochannelsrestframework.decorators import action
-# from rest_framework import status
-# from urllib.parse import parse_qs
-
-
-# class InterviewConsumer(
-#     GenericAsyncAPIConsumer,
-#     ListModelMixin,
-#     PatchModelMixin,
-#     CreateModelMixin,
-# ):
-#     queryset = Interview.objects.all()
-#     serializer_class = InterviewSerializer
-
-#     async def connect(self, **kwargs):
-#         query_params = parse_qs(self.scope["query_string"].decode())
-#         await super().connect()
-
-#     @model_observer(Interview)
-#     async def model_change(self, message, observer=None, **kwargs):
-#         await self.send_json(message)
-
-#     @model_change.serializer
-#     def model_serialize(self, instance, action, **kwargs):
-#         return dict(data = InterviewSerializer(instance=instance).data, action = action.value)
-
-#     @action()
-#     def list_interviews_for_round(self, request_id, round_id, **kwargs):
-#         queryset = Interview.objects.filter(round__id = round_id)
-#         return InterviewSerializer(instance=queryset, many=True).data, status.HTTP_200_OK
-
 from channels.generic.websocket import WebsocketConsumer
-from nexus_app.models import Panel
-from nexus_app.models import Interview
+from nexus_app.models import Panel, Interview, ImgMember, Message
 from nexus_app.api.serializers.interview import InterviewSerializer
+from nexus_app.api.serializers.message import MessageSerializer
 import json
 from asgiref.sync import async_to_sync
 
@@ -104,3 +67,44 @@ class InterviewConsumer(WebsocketConsumer):
             self.round_group_name,
             self.channel_name
         )
+
+
+class MessageConsumer(WebsocketConsumer):
+    def connect(self):
+        self.interview_id = self.scope["url_route"]["kwargs"]["interview_id"]
+        self.interview_group_name = f"interview_{self.interview_id}"
+        
+        async_to_sync(self.channel_layer.group_add)(
+            self.interview_group_name,
+            self.channel_name
+        )
+        return super().connect()
+
+    def disconnect(self, code):
+        async_to_sync(self.channel_layer.group_discard)(
+            self.interview_group_name,
+            self.channel_name
+        )
+
+    def create_message(self, data):
+        print(data)
+        interview = Interview.objects.get(id=data["interview"])
+        img_member = ImgMember.objects.get(id=data["user_id"])
+        message = data["message"]
+        new_message = Message.objects.create(interview = interview, author = img_member, message = message)
+        new_message.save()
+        serializer = MessageSerializer(instance=new_message)
+        async_to_sync(self.channel_layer.group_send)(
+            self.interview_group_name, {"type": "message", "message": serializer.data, "action_type": "new_message"}
+        )
+
+    def message(self, event):
+        message = event["message"]
+        action_type = event["action_type"]
+        self.send(text_data=json.dumps({"data": message, "action_type": action_type}))
+
+    def receive(self, text_data=None, bytes_data=None):
+        data = json.loads(text_data)
+        action_demanded = data["action"]
+        if action_demanded == "create_message":
+            self.create_message(data["data"])

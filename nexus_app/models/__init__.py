@@ -10,6 +10,7 @@ from .season import Season
 from .section import Section
 from .section_marks import SectionMarks
 from .test import Test
+from .message import Message
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver

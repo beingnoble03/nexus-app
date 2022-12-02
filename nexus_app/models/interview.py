@@ -14,4 +14,4 @@ class Interview(models.Model):
     remarks = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self) -> str:
-        return f'{self.applicant} -{self.round}'
+        return f'{self.id} {self.applicant} -{self.round}'

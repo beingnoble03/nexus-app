@@ -1,7 +1,8 @@
 from rest_framework import viewsets
+from nexus_app.api.serializers.message import MessageSerializer
 from nexus_app.models import Round, Applicant
 from nexus_app.api.serializers.interview import InterviewSerializer
-from nexus_app.models import Interview
+from nexus_app.models import Interview, Message
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters
@@ -12,6 +13,7 @@ from rest_framework import status
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
 from rest_framework.decorators import action
+from nexus_app.permissions import Is3or4y
 import pandas
 
 
@@ -132,3 +134,17 @@ class InterviewViewSet(viewsets.ModelViewSet):
         return Response({
             "message": "Created and updated all interviews successfully."
         }, status=status.HTTP_201_CREATED)
+
+
+    @action(
+        methods=["GET", ],
+        detail=True,
+        url_path="messages",
+        url_name="messages",
+        permission_classes = [IsAuthenticated, Is3or4y, ],
+        authentication_classes= [TokenAuthentication, ]
+    )
+    def get_messages(self, request, **kwargs):
+        messages = Message.objects.filter(interview__id=kwargs["pk"])
+        serializer = MessageSerializer(instance=messages, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
