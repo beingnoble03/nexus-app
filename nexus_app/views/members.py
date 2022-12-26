@@ -105,7 +105,7 @@ class MemberViewSet(viewsets.ModelViewSet):
                 img_member.is_staff = True
                 img_member.save()
                 user_data["token"] = Token.objects.get(user = img_member).key
-                return Response(user_data, status=status.HTTP_201_CREATED)
+                return redirect(f'http://localhost:3000/oauthJump/?token={user_data["token"]}')
 
             user_required.name = personal_details["fullName"]
             user_required.branch = student_details["branch name"]
